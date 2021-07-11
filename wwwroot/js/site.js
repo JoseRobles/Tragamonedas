@@ -3,10 +3,13 @@
 
 // Write your JavaScript code.
 function play() {
+/*Send Request*/
+
+/*Spin all slots*/
 
 }
-function spin() {
-
+function spin(element, amount) {
+    document.getElementById(element).style.backgroundPosition = "0 -" + (amount-1)*100 + "px";
 }
 
 function random(seed) {
@@ -21,7 +24,8 @@ function randomSlots()
 }
 
 function setRandomSlots() {
-    debugger;
     var result = randomSlots();
-    console.log(result);
+    spin("first-slot", result.first);
+    spin("second-slot", result.second);
+    spin("third-slot", result.third);
 }
