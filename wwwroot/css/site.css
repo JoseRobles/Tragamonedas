@@ -75,6 +75,7 @@ body {
     height: 100px;
     width: 96px;
     background-position: 0 0px;
+    background-repeat: inherit;
 }
 
 .slot-container{
