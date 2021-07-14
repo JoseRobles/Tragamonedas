@@ -5,9 +5,11 @@ VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tragamonedas", "Tragamonedas.csproj", "{BD875CE7-13BB-4E06-8EC5-0C9F3944BB84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "..\Infrastructure\Infrastructure.csproj", "{D667DF29-DAD9-4A47-ACC1-32F0B51D48AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "..\Infrastructure\Infrastructure.csproj", "{D667DF29-DAD9-4A47-ACC1-32F0B51D48AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "..\Domain\Domain.csproj", "{39E3ED91-EBAF-4BC8-B28A-A6037D956199}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "..\Domain\Domain.csproj", "{39E3ED91-EBAF-4BC8-B28A-A6037D956199}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TragamonedasTest", "..\TragamonedasTest\TragamonedasTest.csproj", "{022BBA2A-0D4C-4FFB-9359-F280A3CDE2BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{39E3ED91-EBAF-4BC8-B28A-A6037D956199}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39E3ED91-EBAF-4BC8-B28A-A6037D956199}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39E3ED91-EBAF-4BC8-B28A-A6037D956199}.Release|Any CPU.Build.0 = Release|Any CPU
+		{022BBA2A-0D4C-4FFB-9359-F280A3CDE2BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{022BBA2A-0D4C-4FFB-9359-F280A3CDE2BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{022BBA2A-0D4C-4FFB-9359-F280A3CDE2BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{022BBA2A-0D4C-4FFB-9359-F280A3CDE2BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

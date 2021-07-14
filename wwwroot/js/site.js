@@ -7,6 +7,7 @@ let spinning_second_slot = false;
 let spinning_third_slot = false;
 let response_from_server = false;
 let response_sent = true;
+let is_random = true;
 let initial_position_first_slot = 0;
 let initial_position_second_slot = 0;
 let initial_position_third_slot = 0;
@@ -14,30 +15,60 @@ let final_position_first_slot = 0;
 let final_position_second_slot = 0;
 let final_position_third_slot = 0;
 
-
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function play() {
 /*Send Request*/
-    $.ajax({
 
+    response_from_server = false;
+    $("#play").prop("disabled", true);
+
+    $.ajax({
         url: '/Play/Throw',
         type: 'GET',
         dataType: 'json',
         success: function (data) {
+            is_random = data.is_random;
+            final_position_first_slot = data.first_slot;
+            final_position_second_slot = data.second_slot;
+            final_position_third_slot = data.third_slot;
+
+            console.log(final_position_first_slot);
+            console.log(final_position_second_slot);
+            console.log(final_position_third_slot);
             response_from_server = true;
+        },
+        error: function (request, error) {
+            debugger;
+            alert("Request: " + JSON.stringify(request));
+        }
+    });
+    
+    /*Spin all slots*/
+    spin(2, 110);
+}
+
+function checkCredits() {
+    $.ajax({
+
+        url: '/Play/GetCredits',
+        type: 'GET',
+        dataType: 'json',
+        success: function (credits) {
+            if (credits == "0") {
+                $("#play").prop("disabled", true);
+            }
         },
         error: function (request, error) {
             alert("Request: " + JSON.stringify(request));
         }
     });
-    response_from_server = false;
-    /*Spin all slots*/
-    spin(2, 110);
 }
+
 function setInitialPosition(element, position) {
+    checkCredits();
     document.getElementById(element).style.backgroundPosition = "0 -" + (position-1)*100 + "px";
 }
 
@@ -55,7 +86,7 @@ function calculatePosition(amount) {
 
 async function spin(times, speed) {
     let fixed_amount = 20;
-    let limit = times * 4 * (1 / (fixed_amount/100));
+    let limit = 100000;
     let index = 0;
 
     let first_slot = document.getElementById("first-slot").style.backgroundPositionY.toString();
@@ -69,7 +100,7 @@ async function spin(times, speed) {
     spinning_first_slot = true;
     spinning_second_slot = true;
     spinning_third_slot = true;
-    response_sent = true;
+    response_sent = false;
 
     while (index < limit) {
 
@@ -85,11 +116,26 @@ async function spin(times, speed) {
             setPosition("third-slot", spin_amount_third);
         }
 
-        if (response_from_server && response_sent) {
-            setTimeout(function () { spinning_first_slot = false; console.log("spinning first false"); }, 1000);
-            setTimeout(function () { spinning_second_slot = false; console.log("spinning second false"); }, 2000);
-            setTimeout(function () { spinning_third_slot = false; console.log("spinning third false"); }, 3000);
-            response_sent = false;
+        if (response_from_server && !response_sent) {
+            if (!is_random) {
+                if (getPosition("first-slot") == final_position_first_slot) {
+                    spinning_first_slot = false;
+                }
+                if (getPosition("second-slot") == final_position_second_slot) {
+                    spinning_second_slot = false;
+                }
+                if (getPosition("third-slot") == final_position_third_slot) {
+                    spinning_third_slot = false;
+                }
+                if (spinning_first_slot == false && spinning_second_slot == false && spinning_third_slot == false) {
+                    response_sent = true;
+                }
+            } else {
+                setTimeout(function () { spinning_first_slot = false; }, 1000);
+                setTimeout(function () { spinning_second_slot = false; }, 2000);
+                setTimeout(function () { spinning_third_slot = false; }, 3000);
+                response_sent = true;
+            }
         }
 
         spin_amount_first = spin_amount_first + fixed_amount;
@@ -98,22 +144,26 @@ async function spin(times, speed) {
         index++;
 
         if (spinning_first_slot == false && spinning_second_slot == false && spinning_third_slot == false) {
+            $("#play").prop("disabled", false);
             break;
         }
 
     }
 
-    first_slot = document.getElementById("first-slot").style.backgroundPositionY.toString();
-    second_slot = document.getElementById("second-slot").style.backgroundPositionY.toString();
-    third_slot = document.getElementById("third-slot").style.backgroundPositionY.toString();
+    final_position_first_slot = getPosition("first-slot");
+    final_position_second_slot = getPosition("second-slot");
+    final_position_third_slot = getPosition("third-slot");
 
-    final_position_first_slot = calculatePosition(parseInt(first_slot.replace("-", "").replace("px", "")));
-    final_position_second_slot = calculatePosition(parseInt(second_slot.replace("-", "").replace("px", "")));
-    final_position_third_slot = calculatePosition(parseInt(third_slot.replace("-", "").replace("px", "")));
+    if (final_position_first_slot > 0 && final_position_second_slot > 0 && final_position_third_slot > 0) {
+        sendResult();
+    } else {
+        alert("Ocurrio un error");
+    }
+}
 
-    console.log(final_position_first_slot);
-    console.log(final_position_second_slot);
-    console.log(final_position_third_slot);
+function getPosition(slot) {
+    var slot = document.getElementById(slot).style.backgroundPositionY.toString();
+    return calculatePosition(parseInt(slot.replace("-", "").replace("px", "")));
 }
 
 function random(seed) {
@@ -135,4 +185,30 @@ function setRandomSlots() {
     setInitialPosition("first-slot", result.first);
     setInitialPosition("second-slot", result.second);
     setInitialPosition("third-slot", result.third);
+}
+
+function sendResult() {
+    let result = false;
+    let result_index = 0;
+    if (final_position_first_slot == final_position_second_slot && final_position_second_slot == final_position_third_slot) {
+        result = true;
+        result_index = final_position_first_slot;
+    }
+    
+    $.ajax({
+
+        url: '/Play/SetResult',
+        type: 'POST',
+        dataType: 'json',
+        data: { winner: result, index: result_index},
+        success: function (data) {
+            $("#credits").html(data.credits);
+            if (data.credits == "0") {
+                $("#play").prop("disabled", true);
+            }
+        },
+        error: function (request, error) {
+            alert("Request: " + JSON.stringify(request));
+        }
+    });
 }

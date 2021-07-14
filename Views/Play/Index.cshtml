@@ -1,8 +1,13 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Http;
+@{
     ViewData["Title"] = "Play Page";
 }
 
 <div class="text-center">
+    <div class="credit-container">
+        <div>Credits</div>
+        <label id="credits">@Context.Session.GetString("Credits")</label>
+    </div>
     <div class="play-container" id="container">
         <div class="slot-container">
             <div class="slot">
