@@ -8,10 +8,15 @@ Slot: Ranuras
 
 # En cuanto al front-end se implementó de la siguiente manera:
 La lógica de esta sección se encuentra en el folder wwwroot.
+
 Las paginas html se renderizan a partir de las views que se encuentran implementadas en los archivos cshtml.
+
 La mayoría de la logica se maneja con javascript con ayuda en algunas ocasiones de jquery para simplicar el codigo sobre todo en las llamadas al backend cuya implementación se encuentra en el archivo site.js.
+
 La animación en css se logra con el uso de un sprite con las imagenes solicitadas. La logica que hace girar las imagenes se encuentra en la funcion SPIN que maneja la logica de envio de peticiones al servidor. Este sprite simplifica la cantidad de imagenes que se necesitan usar ademas de proporcionar un medio para que la animacion se pueda lograr. La implementación de los estilos se encuentra en el archivo site.css.
+
 La tirada inicial es manejada por la funcion play que sigue los requerimientos indicados. Cada vez que recibimos la respuesta del servidor se espera un 1 segundo para dejar de girar el primer slot, 2 para el segundo y 3 para el tercero. Esta logica se maneja en el front-end y no en el backend ya que de hacerlo en el backend no cumpliriamos con los rangos indicados en segundos.
+
 Las tiradas cuando los creditos estan por encima de 39 creditos tienen una logica distinta para simular una tirada normal pero que estan manejadas con la logica en el back-end.
 
 # En cuanto al back-end se implementó de la siguiente manera:
