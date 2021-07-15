@@ -24,7 +24,11 @@ namespace Tragamonedas.Controllers
         {
             if (HttpContext.Session.GetString("Credits") == null)
             {
-                HttpContext.Session.SetString("Credits", "60");
+                HttpContext.Session.SetString("Credits", "10");
+            }
+            if (HttpContext.Session.GetString("Account") == null)
+            {
+                HttpContext.Session.SetString("Account", "0");
             }
             return View();
         }
@@ -46,7 +50,7 @@ namespace Tragamonedas.Controllers
         {
             var response = new PlayResultResponse();
             var credits = HttpContext.Session.GetString("Credits");
-            if (credits != null)
+            if (credits != null && credits != "0")
             {
                 var amount = 0;
                 int.TryParse(credits, out amount);
@@ -66,18 +70,39 @@ namespace Tragamonedas.Controllers
             int total = 0;
             int.TryParse(storedCredits, out credits);
 
-            if (result.winner)
+            if (credits > 0)
             {
-                total = credits + prize;
-            }
-            else
-            {
-                total = credits - 1;
+                if (result.winner)
+                {
+                    total = credits + prize;
+                }
+                else
+                {
+                    total = credits - 1;
+                }
             }
             
             HttpContext.Session.SetString("Credits", total.ToString());
             response.credits = total;
             return await Task.FromResult(response);
+        }
+
+        [HttpPost("play/transfer")]
+        public ActionResult<string> Transfer()
+        {
+            var credits = HttpContext.Session.GetString("Credits");
+            if (credits == null)
+            {
+                credits = "0";
+            }
+
+            if (credits !="0")
+            {
+                HttpContext.Session.SetString("Account", credits);
+                HttpContext.Session.SetString("Credits", "0");
+            }
+
+            return Json(credits);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -89,3 +89,13 @@ body {
 .play-container {
     background-color: #451647;
 }
+.cashout-container {
+    margin-top: 300px;
+}
+.score-container {
+    display: inline-flex;
+    width: auto;
+}
+.score-item {
+    margin: 0 50px;
+}

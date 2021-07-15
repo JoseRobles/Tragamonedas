@@ -20,7 +20,6 @@ function sleep(ms) {
 }
 
 function play() {
-/*Send Request*/
 
     response_from_server = false;
     $("#play").prop("disabled", true);
@@ -34,20 +33,14 @@ function play() {
             final_position_first_slot = data.first_slot;
             final_position_second_slot = data.second_slot;
             final_position_third_slot = data.third_slot;
-
-            console.log(final_position_first_slot);
-            console.log(final_position_second_slot);
-            console.log(final_position_third_slot);
             response_from_server = true;
         },
-        error: function (request, error) {
-            debugger;
-            alert("Request: " + JSON.stringify(request));
+        error: function (error) {
+            alert("Se produjo un error.");
         }
     });
     
-    /*Spin all slots*/
-    spin(2, 110);
+    spin(110);
 }
 
 function checkCredits() {
@@ -59,10 +52,11 @@ function checkCredits() {
         success: function (credits) {
             if (credits == "0") {
                 $("#play").prop("disabled", true);
+                $("#cashout").prop("disabled", true);
             }
         },
-        error: function (request, error) {
-            alert("Request: " + JSON.stringify(request));
+        error: function (error) {
+            alert("Ocurrio un error");
         }
     });
 }
@@ -84,7 +78,7 @@ function calculatePosition(amount) {
     return preCalculated;
 }
 
-async function spin(times, speed) {
+async function spin(speed) {
     let fixed_amount = 20;
     let limit = 100000;
     let index = 0;
@@ -117,7 +111,7 @@ async function spin(times, speed) {
         }
 
         if (response_from_server && !response_sent) {
-            if (!is_random) {
+            if (!is_random && index > 20) {
                 if (getPosition("first-slot") == final_position_first_slot) {
                     spinning_first_slot = false;
                 }
@@ -162,19 +156,75 @@ async function spin(times, speed) {
 }
 
 function getPosition(slot) {
-    var slot = document.getElementById(slot).style.backgroundPositionY.toString();
-    return calculatePosition(parseInt(slot.replace("-", "").replace("px", "")));
+    let positionSlot = document.getElementById(slot).style.backgroundPositionY.toString();
+    return calculatePosition(parseInt(positionSlot.replace("-", "").replace("px", "")));
 }
 
-function random(seed) {
-    let min = 1;
-    let max = 4;
-    return Math.round(Math.random() * (max - min) + seed);
+function random(min, max) {
+    return Math.round(Math.random() * (max - min) + min);
 }
 
+function cashOut() {
+    $("#play").prop("disabled", true);
+    $("#cashout").prop("disabled", true);
+
+    $.ajax({
+        url: '/Play/Transfer',
+        type: 'POST',
+        dataType: 'json',
+        success: function (account) {
+            $("#credits").html("0");
+            if (account != "0") {
+                $("#account").html(account);
+            }
+        },
+        error: function (error) {
+            alert("Ocurrio un error");
+        }
+    });
+}
+
+function hideCashOut() {
+    let probability = [1, 1, 1, 1, 1, 2, 2, 2, 2, 0];
+    let option = probability[random(0, 9)];
+    let position = random(0, 4);
+
+    
+    switch (option) {
+        case 1:
+            moveToNewPosition(position);
+            $("#cashout").prop("disabled", false);
+            break;
+        case 2:
+            $("#cashout").prop("disabled", true);
+            break;
+        default:
+            break;
+    }
+
+}
+
+function moveToNewPosition(position) {
+    switch (position) {
+        case 1:
+            document.getElementById("cashout").style.margin = "300px 0 0 0";
+            break;
+        case 2:
+            document.getElementById("cashout").style.margin = "0 300px 0 0";
+            break;
+        case 3:
+            document.getElementById("cashout").style.margin = "0 0 300px 0";
+            break;
+        case 4:
+            document.getElementById("cashout").style.margin = "0 0 0 300px";
+            break;
+        default:
+            break;
+    }
+}
 function randomSlots()
 {
-    return { "first": random(1.5), "second": random(1.8), "third": random(1.4) };
+    return { "first": random(1,4), "second": random(1,4), "third": random(1,4) };
 }
 
 function setRandomSlots() {

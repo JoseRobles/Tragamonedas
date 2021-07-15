@@ -4,9 +4,15 @@
 }
 
 <div class="text-center">
-    <div class="credit-container">
-        <div>Credits</div>
-        <label id="credits">@Context.Session.GetString("Credits")</label>
+    <div class="score-container">
+        <div class="score-item">
+            <div>Credits</div>
+            <label id="credits">@Context.Session.GetString("Credits")</label>
+        </div>
+        <div class="score-item">
+            <div>Account</div>
+            <label id="account">@Context.Session.GetString("Account")</label>
+        </div>
     </div>
     <div class="play-container" id="container">
         <div class="slot-container">
@@ -24,6 +30,11 @@
             <button id="play" onclick="play()">Play</button>
         </div>
 
+    </div>
+    <div class="cashout-container">
+        <div class="cashout">
+            <button id="cashout" onmouseover="hideCashOut()" onclick="cashOut()">CashOut</button>
+        </div>
     </div>
 
 </div>
