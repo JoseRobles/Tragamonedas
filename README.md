@@ -2,6 +2,8 @@
 
 Este proyecto esta construido como un sitio web MVC usando el framework .NET 5. Como tal hace uso de las herramientas que proporciona el propio framework. Además he añadido algunos paquetes y librerias adicionales para ayudar a simplificar el codigo que se detallaran en cada una de las secciones.
 
+El proyecto se puede ejecutar en un contenedor usando docker.
+
 # Términos
 Slot: Ranuras
 
