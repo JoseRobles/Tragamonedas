@@ -20,18 +20,27 @@ La tirada inicial es manejada por la funcion play que sigue los requerimientos i
 Las tiradas cuando los creditos estan por encima de 39 creditos tienen una logica distinta para simular una tirada normal pero que estan manejadas con la logica en el back-end.
 
 # En cuanto al back-end se implementó de la siguiente manera:
-Las tiradas por encima de 39 creditos estan manejadas por la logica en el back-end usando el patron strategy. De esta manera se mantiene la lógica separada y es mas facil de mantener.
+Las tiradas por encima de 39 creditos estan manejadas por la logica en el back-end usando el patron strategy. De esta manera se mantiene la lógica separada y es mas fácil de mantener.
+
 El manejo de la session es solo hecho a nivel del controlador.
-Se implemento una inyección de dependencias para permitir hacer mas fácil las pruebas unitarias.
+
+Se implementó una inyección de dependencias para permitir hacer mas fácil las pruebas unitarias.
+
 La estrutura del proyecto usa un light domain driven design separando el diseño de la implementación. Esto se nota en la separacion de clases en proyectos fuera del proyecto web. Estas clases son usadas en diferentes partes de la aplicacion por lo que abstraerlas del proyecto principal hace sentido.
 
 # En cuanto a las pruebas
 Las pruebas se encuentran en el proyecto TragamonedasTest.
+
 Todas las pruebas se realizaron sobre la lógica del negocio que se definió en el servicio PlayService.
+
 Se implementó una clase TestSettings para hacer el setup inicial para las pruebas.
+
 Los test de probabilidad siguen la siguiente logica:
+
 La probabilidad de las tiradas random son de alrededor de 80% de pérdidas así que la prueba utiliza una simulación de 100 tiradas para ver que tan probable es ganar.
+
 La probabilidad de la tirada de 40 a 60 créditos evidencia una bajada sensible en la cantidad de tiradas ganadoras. Ya que hay un 30% mas de probabilidad de volver a tirar se redujo la cantidad de jugadas ganadoras esperadas aproximadamente en el mismo porcentaje.
+
 La probabilidad de la tirada de 60 a más créditos evidencia una bajada adicional en la cantidad de tiradas ganadoras pero que adicional hace más probable que las tiradas ganadoras generen nuevas tiradas ganadoras ya que es más probable también el volver a tirar. Igualmente se reduce el porcentaje de jugadas ganadoras esperado.
 
 
